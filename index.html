@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>メッセナゴヤ X出展社さがし｜@TechnoaPr</title>
+<meta name="description" content="メッセナゴヤでX公式アカウントのある出展社を探せるガイド。運営：@TechnoaPr">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ===== 設定はJSの CONFIG で ===== */
+:root{
+  --sky:#5BBEEB; --sky-deep:#2E8FCF; --navy:#173B6C; --yellow:#F7D83F;
+  --paper:#FFFFFF; --ink:#1F2A37; --muted:#5B6878; --line:#D6E6F2; --soft:#EEF7FD;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0; color:var(--ink); background:var(--sky);
+  font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",sans-serif;
+  font-weight:500; line-height:1.7; -webkit-text-size-adjust:100%;
+}
+/* スマホ背景：固定（iOS対策で疑似要素） */
+body{background:var(--soft)}
+.scene{background:var(--sky) url("bg-sp.jpg") center bottom / cover no-repeat;
+  min-height:calc(108vw + 220px);padding-bottom:8px}
+a{color:var(--sky-deep)}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+
+/* ===== ヘッダー（空の部分に乗せる） ===== */
+.hero{padding:16px 0 4px;text-align:center}
+.plate{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.92);border-radius:999px;padding:6px 16px 6px 6px;box-shadow:0 3px 0 var(--sky-deep)}
+.hero .event{display:inline-block;background:var(--navy);color:#fff;font-weight:700;
+  font-size:.75rem;padding:3px 10px;border-radius:999px}
+.hero h1{margin:0;font-weight:900;font-size:1.25rem;line-height:1.3;color:var(--navy)}
+.hero p{display:none}
+
+/* ===== 検索 ===== */
+.search{position:relative;top:env(safe-area-inset-top,0px);z-index:5;padding:10px 0 12px}
+.search-box{background:var(--paper);border-radius:18px;padding:10px;
+  box-shadow:0 6px 0 var(--sky-deep)}
+.q{display:flex;align-items:center;gap:8px;background:var(--soft);border-radius:14px;padding:0 12px}
+.q svg{flex:none}
+.q input{flex:1;border:0;background:transparent;font:inherit;font-size:1rem;padding:10px 0;color:var(--ink);min-width:0}
+.q input:focus{outline:none}
+.q:focus-within{box-shadow:0 0 0 3px var(--yellow)}
+.filters{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;margin-top:8px;align-items:center;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filters>*{flex:none}
+.filters .lbl{font-size:.8rem;color:var(--muted);font-weight:700;margin-right:2px}
+.chip{font:inherit;font-size:.85rem;font-weight:700;border:2px solid var(--line);background:#fff;
+  color:var(--navy);border-radius:999px;padding:4px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.chip.nov[aria-pressed="true"]{background:var(--yellow);border-color:var(--yellow);color:var(--navy)}
+.count{margin:6px 2px 0;font-size:.85rem;color:var(--muted)}
+
+/* ===== リスト ===== */
+.list{list-style:none;margin:0;padding:16px 0 24px;display:grid;gap:12px}
+.card{background:rgba(255,255,255,.97);border-radius:18px;padding:16px;border:2px solid var(--line)}
+.top{display:flex;gap:12px;align-items:flex-start}
+.booth{flex:none;min-width:64px;text-align:center;background:var(--sky);color:#fff;border-radius:12px;padding:6px 8px;line-height:1.2}
+.booth small{display:block;font-size:.65rem;font-weight:700;opacity:.9}
+.booth b{font-size:1.15rem;font-weight:900}
+.booth.unk{background:#C9D6E2}
+.booth.unk b{font-size:.9rem}
+.name{min-width:0;flex:1}
+.name h2{margin:0;font-size:1.1rem;font-weight:900;line-height:1.4;word-break:break-word}
+.name .via{margin:2px 0 0;font-size:.8rem;color:var(--muted)}
+.handle{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-weight:700;text-decoration:none;word-break:break-all}
+.handle:hover{text-decoration:underline}
+
+.days{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:12px;font-size:.8rem}
+.days .t{color:var(--muted);font-weight:700;margin-right:2px}
+.d{border-radius:8px;padding:2px 8px;font-weight:700;border:2px solid var(--line);color:#9AA8B6}
+.d.on{background:var(--soft);border-color:var(--sky);color:var(--navy)}
+.d.all{background:var(--navy);border-color:var(--navy);color:#fff}
+.d.na{color:var(--muted)}
+.nov-badge{margin-left:auto;background:var(--yellow);color:var(--navy);font-weight:900;border-radius:8px;padding:2px 10px}
+
+.comment{position:relative;margin:14px 0 0;background:var(--soft);border-radius:14px;padding:10px 14px;font-size:.95rem}
+.comment::before{content:"";position:absolute;top:-8px;left:22px;border:8px solid transparent;border-top:0;border-bottom-color:var(--soft)}
+.post{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:12px;padding:10px;
+  border-radius:12px;background:var(--navy);color:#fff;font-weight:700;text-decoration:none}
+.post:hover{background:var(--sky-deep)}
+
+.empty,.notice{background:rgba(255,255,255,.95);border-radius:18px;padding:20px;text-align:center}
+.empty b{display:block;font-size:1.05rem;margin-bottom:4px}
+.notice{text-align:left;font-size:.85rem;color:var(--muted)}
+.notice h3{margin:0 0 6px;font-size:.95rem;color:var(--navy)}
+.notice ul{margin:0;padding-left:1.2em}
+footer{padding:8px 0 40px}
+
+/* ===== PC ===== */
+@media (min-width:768px){
+  .scene{background:none;min-height:0;padding:0}
+  .hero{position:relative;padding:0;min-height:0;aspect-ratio:1024/572;max-height:68vh;width:100%;
+    background:var(--sky) url("bg-pc.jpg") center bottom / cover no-repeat;
+    display:flex;flex-direction:column;justify-content:flex-start;padding-top:min(3vw,32px)}
+  .hero h1{font-size:1.6rem}
+  .list{padding-top:16px}
+  .search{margin-top:-56px}
+  .list{grid-template-columns:repeat(2,1fr)}
+  .card{border-color:#fff;box-shadow:0 2px 0 var(--line)}
+}
+@media (min-width:1080px){ .list{grid-template-columns:repeat(3,1fr)} }
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="scene">
+<header class="hero">
+  <div class="wrap"><div class="plate">
+    <span class="event">メッセナゴヤ</span>
+    <h1>X出展社さがし</h1>
+      </div></div>
+</header>
+
+<div class="wrap">
+  <div class="search">
+    <div class="search-box" role="search">
+      <label class="q">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2E8FCF" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="社名・ブース番号・@アカウント" autocomplete="off" aria-label="キーワードで探す">
+      </label>
+      <div class="filters" role="group" aria-label="絞り込み">
+        <span class="lbl">X担当がいる日</span>
+        <button class="chip" data-day="" aria-pressed="true">すべて</button>
+        <button class="chip" data-day="11" aria-pressed="false">11日</button>
+        <button class="chip" data-day="12" aria-pressed="false">12日</button>
+        <button class="chip" data-day="13" aria-pressed="false">13日</button>
+        <button class="chip nov" id="nov" aria-pressed="false">ノベルティあり</button>
+      </div>
+      <p class="count" id="count" aria-live="polite">読み込み中…</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<main class="wrap">
+  <ul class="list" id="list"></ul>
+
+  <footer>
+    <div class="notice">
+      <h3>掲載について</h3>
+      <ul>
+        <li>企業の公式Xアカウントを掲載しています。</li>
+        <li>各社のXのポストをもとに掲載し、確認できない項目は「不明」としています。</li>
+        <li>X担当の対応日は、当日の都合で変わる場合があります。</li>
+        <li>掲載のご希望・修正は <a href="https://x.com/TechnoaPr" target="_blank" rel="noopener">@TechnoaPr</a> までご連絡ください。</li>
+      </ul>
+      <p style="margin:10px 0 0">運営：株式会社テクノア（@TechnoaPr）</p>
+    </div>
+  </footer>
+</main>
+
+<script>
+/* ===== 設定 =====
+   Googleスプレッドシート →［ファイル］→［共有］→［ウェブに公開］→ 形式「CSV」で発行したURLを入れてください。
+   */
+const CONFIG = {
+  SHEET_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTsPKOBljc-HDJ0umKEguU5Xti1IP72ppHPySss_wa1-VoKXhqTVKk7jSDMoFHEn1Y_C1RHCKDDidFM/pub?output=csv"
+};
+
+
+
+/* CSV（引用符・改行対応） */
+function parseCSV(text){
+  const rows=[];let row=[],f="",q=false;
+  text=text.replace(/^\uFEFF/,"");
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c=='"'){ if(text[i+1]=='"'){f+='"';i++} else q=false } else f+=c; }
+    else if(c=='"') q=true;
+    else if(c==','){row.push(f);f=""}
+    else if(c=='\n'||c=='\r'){ if(c=='\r'&&text[i+1]=='\n')i++; row.push(f);rows.push(row);row=[];f=""; }
+    else f+=c;
+  }
+  if(f!==""||row.length){row.push(f);rows.push(row)}
+  const head=rows.shift().map(h=>h.trim());
+  return rows.filter(r=>r.some(v=>v.trim())).map(r=>Object.fromEntries(head.map((h,i)=>[h,(r[i]||"").trim()])));
+}
+
+/* 列名のゆれを吸収 */
+const pick=(o,...keys)=>{for(const k of keys){if(o[k])return o[k]}return ""};
+function normalize(o){
+  const handle=pick(o,"Xアカウント","Xアカウント名","アカウント").replace(/^https?:\/\/(x|twitter)\.com\//,"").replace(/^@/,"").split(/[/?]/)[0];
+  const daysRaw=pick(o,"X担当対応可能日","対応可能日").toUpperCase();
+  let days={type:"unknown",list:[]};
+  if(/ALL|全日/.test(daysRaw)) days={type:"all",list:["11","12","13"]};
+  else if(/不在/.test(daysRaw)) days={type:"none",list:[]};
+  else { const l=(daysRaw.match(/1[123]/g)||[]); if(l.length) days={type:"some",list:[...new Set(l)]}; }
+  const nov=pick(o,"ノベルティ","ノベルティ有無");
+  return {
+    company:pick(o,"社名","企業名","出展者名"),
+    boothName:pick(o,"出展ブース名","ブース名"),
+    booth:pick(o,"ブース番号","小間番号"),
+    handle, days,
+    comment:pick(o,"一言コメント","コメント"),
+    novelty:/あり|有|○|〇|yes|true/i.test(nov),
+    post:pick(o,"出展ポストURL","出展に関するポスト","ポストURL")
+  };
+}
+
+const esc=s=>s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const kana=s=>s.normalize("NFKC").toLowerCase().replace(/[\u30a1-\u30f6]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60));
+const boothKey=b=>b?b.normalize("NFKC").replace(/\d+/g,n=>n.padStart(5,"0")):"\uffff";
+
+let DATA=[]; const state={q:"",day:"",nov:false};
+
+function card(x){
+  const booth=x.booth&&x.booth!=="不明"
+    ?`<div class="booth"><small>ブース</small><b>${esc(x.booth)}</b></div>`
+    :`<div class="booth unk"><small>ブース</small><b>不明</b></div>`;
+  let days;
+  if(x.days.type==="all") days=`<span class="d all">全日滞在</span>`;
+  else if(x.days.type==="none") days=`<span class="d na">不在</span>`;
+  else if(x.days.type==="unknown") days=`<span class="d na">不明</span>`;
+  else days=["11","12","13"].map(d=>`<span class="d ${x.days.list.includes(d)?"on":""}">${d}日</span>`).join("");
+  const via=x.boothName&&x.boothName!==x.company?`<p class="via">${esc(x.boothName)} ブース内</p>`:"";
+  const handle=x.handle?`<a class="handle" href="https://x.com/${encodeURIComponent(x.handle)}" target="_blank" rel="noopener">@${esc(x.handle)}</a>`:"";
+  const post=/^https?:\/\//.test(x.post)?`<a class="post" href="${esc(x.post)}" target="_blank" rel="noopener">出展のポストを見る</a>`:"";
+  return `<li class="card">
+    <div class="top">${booth}<div class="name"><h2>${esc(x.company)}</h2>${via}${handle}</div></div>
+    <div class="days"><span class="t">X担当</span>${days}${x.novelty?`<span class="nov-badge">ノベルティあり</span>`:""}</div>
+    ${x.comment?`<p class="comment">${esc(x.comment)}</p>`:""}
+    ${post}
+  </li>`;
+}
+
+function render(){
+  const q=kana(state.q.trim());
+  const res=DATA.filter(x=>{
+    if(state.day&&!x.days.list.includes(state.day))return false;
+    if(state.nov&&!x.novelty)return false;
+    if(!q)return true;
+    return q.split(/\s+/).every(w=>x._s.includes(w.replace(/^@/,"")));
+  });
+  document.getElementById("count").textContent=`${res.length}社を表示中（全${DATA.length}社）`;
+  document.getElementById("list").innerHTML=res.length?res.map(card).join("")
+    :`<li class="empty"><b>条件に合う出展社が見つかりません</b>キーワードを短くするか、絞り込みを「すべて」に戻してください。</li>`;
+}
+
+document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value;render()});
+document.querySelectorAll(".chip[data-day]").forEach(b=>b.addEventListener("click",()=>{
+  state.day=b.dataset.day;
+  document.querySelectorAll(".chip[data-day]").forEach(c=>c.setAttribute("aria-pressed",c===b));
+  render();
+}));
+document.getElementById("nov").addEventListener("click",e=>{
+  state.nov=!state.nov;e.currentTarget.setAttribute("aria-pressed",state.nov);render();
+});
+
+(async()=>{
+  let text;
+  try{
+    const r=await fetch(CONFIG.SHEET_CSV_URL,{cache:"no-store"});
+    if(!r.ok)throw 0;
+    text=await r.text();
+  }catch(e){
+    document.getElementById("count").textContent="データを読み込めませんでした。時間をおいて再読み込みしてください。";
+    return;
+  }
+  DATA=parseCSV(text).map(normalize).filter(x=>x.company)
+    .map(x=>({...x,_s:kana([x.company,x.boothName,x.booth,x.handle,x.comment].join(" "))}))
+    .sort((a,b)=>boothKey(a.booth).localeCompare(boothKey(b.booth))||a.company.localeCompare(b.company,"ja"));
+  render();
+})();
+</script>
+</body>
+</html>
