@@ -96,6 +96,31 @@ a{color:var(--sky-deep)}
   border-radius:12px;background:var(--navy);color:#fff;font-weight:700;text-decoration:none}
 .post:hover{background:var(--sky-deep)}
 
+/* スタンプ */
+.top .name{flex:1}
+.stamp{flex:none;width:58px;height:58px;border-radius:50%;border:2px dashed #A9C4DA;background:#fff;color:var(--muted);
+  font:inherit;font-size:.72rem;font-weight:900;line-height:1.15;cursor:pointer;display:grid;place-items:center;padding:0}
+.stamp[aria-pressed="true"]{border:3px solid #E0453A;color:#E0453A;background:#FFF5F3;transform:rotate(-12deg)}
+.stamp[aria-pressed="true"] .s-on{display:block}.stamp .s-on,.stamp[aria-pressed="true"] .s-off{display:none}
+.stamp .s-on b{display:block;font-size:1.05rem}
+.card.done{border-color:#F4C2BC}
+.rally{margin-top:10px;padding-top:10px;border-top:2px dashed var(--line)}
+.rally-head{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--navy)}
+.rally-head span{font-weight:900}
+.reset{margin-left:auto;font:inherit;font-size:.75rem;font-weight:700;color:var(--muted);background:none;border:0;text-decoration:underline;cursor:pointer;padding:4px}
+.dots{list-style:none;display:flex;gap:4px;margin:6px 0 0;padding:0}
+.dots li{flex:1;height:10px;border-radius:5px;background:var(--line)}
+.dots li.on{background:#E0453A}
+.dots.done li{background:var(--yellow)}
+.celebrate{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:24px;background:rgba(23,59,108,.55)}
+.celebrate[hidden]{display:none}
+.cele-box{background:#fff;border-radius:24px;padding:20px 20px 22px;text-align:center;max-width:360px;width:100%;box-shadow:0 6px 0 var(--sky-deep);animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+.cele-box img{width:80%;height:auto}
+.cele-box h2{margin:4px 0 4px;font-size:1.5rem;font-weight:900;color:var(--navy)}
+.cele-box p{margin:0 0 14px;font-size:.95rem}
+.cele-box button{font:inherit;font-weight:900;font-size:1rem;color:#fff;background:var(--navy);border:0;border-radius:12px;padding:12px 32px;cursor:pointer}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.cele-box{animation:none}}
 .empty,.notice{background:rgba(255,255,255,.95);border-radius:18px;padding:20px;text-align:center}
 .empty b{display:block;font-size:1.05rem;margin-bottom:4px}
 .notice{text-align:left;font-size:.85rem;color:var(--muted)}
@@ -145,10 +170,16 @@ footer{padding:8px 0 40px}
         <button class="chip" data-day="12" aria-pressed="false">12日</button>
         <button class="chip" data-day="13" aria-pressed="false">13日</button>
         <button class="chip nov" id="nov" aria-pressed="false">ノベルティあり</button>
+        <button class="chip" id="todo" aria-pressed="false">まだ行っていない</button>
       </div>
       <div class="meta"><p class="count" id="count" aria-live="polite">読み込み中…</p>
       <a class="map" href="https://www.messenagoya.jp/pdf/map_2026.pdf" target="_blank" rel="noopener">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg>会場マップ（PDF）</a></div>
+      <div class="rally">
+        <div class="rally-head"><b>ブーススタンプ</b><span id="stampCount">0 / 10</span>
+          <button class="reset" id="reset" type="button">チェックをすべて外す</button></div>
+        <ol class="dots" id="dots" aria-hidden="true"></ol>
+      </div>
     </div>
   </div>
 </div>
@@ -164,12 +195,22 @@ footer{padding:8px 0 40px}
         <li>企業の公式Xアカウントを掲載しています。</li>
         <li>各社のXのポストをもとに掲載し、確認できない項目は「不明」としています。</li>
         <li>X担当の対応日は、当日の都合で変わる場合があります。</li>
+        <li>ブーススタンプはお使いのスマホ（ブラウザ）の中だけに保存されます。</li>
         <li>掲載のご希望・修正は <a href="https://x.com/TechnoaPr" target="_blank" rel="noopener">@TechnoaPr</a> までご連絡ください。</li>
       </ul>
       <p style="margin:10px 0 0">運営：株式会社テクノア（@TechnoaPr）</p>
     </div>
   </footer>
 </main>
+
+<div class="celebrate" id="celebrate" role="dialog" aria-modal="true" aria-labelledby="celeTitle" hidden>
+  <div class="cele-box">
+    <img src="noa-omedeto.png" alt="クラッカーでお祝いするノアちゃん" width="370" height="320">
+    <h2 id="celeTitle">10社まわりました！</h2>
+    <p>おめでとうございます！<br>このままメッセナゴヤを<br>楽しんでくださいね。</p>
+    <button type="button" id="celeClose">閉じる</button>
+  </div>
+</div>
 
 <script>
 /* ===== 設定 =====
@@ -224,7 +265,14 @@ const esc=s=>s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&q
 const kana=s=>s.normalize("NFKC").toLowerCase().replace(/[\u30a1-\u30f6]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60));
 const boothKey=b=>b?b.normalize("NFKC").replace(/\d+/g,n=>n.padStart(5,"0")):"\uffff";
 
-let DATA=[]; const state={q:"",day:"",nov:false};
+let DATA=[]; const state={q:"",day:"",nov:false,todo:false};
+const GOAL=10, KEY="mn2026-visited", KEY_C="mn2026-celebrated";
+const idOf=x=>(x.handle||x.company).toLowerCase();
+let visited=new Set();
+try{visited=new Set(JSON.parse(localStorage.getItem(KEY)||"[]"))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify([...visited]))}catch(e){}};
+const celebrated=()=>{try{return localStorage.getItem(KEY_C)==="1"}catch(e){return false}};
+const setCelebrated=v=>{try{v?localStorage.setItem(KEY_C,"1"):localStorage.removeItem(KEY_C)}catch(e){}};
 
 function card(x){
   const booth=x.booth&&x.booth!=="不明"
@@ -238,8 +286,11 @@ function card(x){
   const via=x.boothName&&x.boothName!==x.company?`<p class="via">${esc(x.boothName)} ブース内</p>`:"";
   const handle=x.handle?`<a class="handle" href="https://x.com/${encodeURIComponent(x.handle)}" target="_blank" rel="noopener">@${esc(x.handle)}</a>`:"";
   const post=/^https?:\/\//.test(x.post)?`<a class="post" href="${esc(x.post)}" target="_blank" rel="noopener">出展のポストを見る</a>`:"";
-  return `<li class="card">
-    <div class="top">${booth}<div class="name"><h2>${esc(x.company)}</h2>${via}${handle}</div></div>
+  const on=visited.has(idOf(x));
+  const stamp=`<button class="stamp" type="button" data-id="${esc(idOf(x))}" aria-pressed="${on}" aria-label="${esc(x.company)}に行った">
+    <span class="s-off">行ったら<br>タップ</span><span class="s-on"><b>済</b>行った！</span></button>`;
+  return `<li class="card${on?" done":""}">
+    <div class="top">${booth}<div class="name"><h2>${esc(x.company)}</h2>${via}${handle}</div>${stamp}</div>
     <div class="days"><span class="t">X担当</span>${days}${x.novelty?`<span class="nov-badge">${x.noveltyName?"ノベルティ："+esc(x.noveltyName):"ノベルティあり"}</span>`:""}</div>
     ${x.comment?`<p class="comment">${esc(x.comment)}</p>`:""}
     ${post}
@@ -251,13 +302,49 @@ function render(){
   const res=DATA.filter(x=>{
     if(state.day&&!x.days.list.includes(state.day))return false;
     if(state.nov&&!x.novelty)return false;
+    if(state.todo&&visited.has(idOf(x)))return false;
     if(!q)return true;
     return q.split(/\s+/).every(w=>x._s.includes(w.replace(/^@/,"")));
   });
-  document.getElementById("count").textContent=`${res.length}社を表示中（全${DATA.length}社）`;
+  document.getElementById("count").textContent=res.length===DATA.length?`全${DATA.length}社`:`${res.length}社 / 全${DATA.length}社`;
   document.getElementById("list").innerHTML=res.length?res.map(card).join("")
     :`<li class="empty"><b>条件に合う出展社が見つかりません</b>キーワードを短くするか、絞り込みを「すべて」に戻してください。</li>`;
+  renderRally();
 }
+function renderRally(){
+  const n=DATA.filter(x=>visited.has(idOf(x))).length;
+  document.getElementById("stampCount").textContent=n>=GOAL?`${n}社 達成！`:`${n} / ${GOAL}`;
+  const dots=document.getElementById("dots");
+  dots.classList.toggle("done",n>=GOAL);
+  dots.innerHTML=Array.from({length:GOAL},(_,i)=>`<li class="${i<n?"on":""}"></li>`).join("");
+  return n;
+}
+function openCelebrate(){
+  const el=document.getElementById("celebrate");el.hidden=false;
+  document.getElementById("celeClose").focus();
+}
+document.getElementById("celeClose").addEventListener("click",()=>{document.getElementById("celebrate").hidden=true});
+document.getElementById("celebrate").addEventListener("click",e=>{if(e.target.id==="celebrate")e.currentTarget.hidden=true});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.getElementById("celebrate").hidden=true});
+document.getElementById("list").addEventListener("click",e=>{
+  const b=e.target.closest(".stamp");if(!b)return;
+  const id=b.dataset.id;
+  visited.has(id)?visited.delete(id):visited.add(id);
+  save();
+  const on=visited.has(id);
+  b.setAttribute("aria-pressed",on);b.closest(".card").classList.toggle("done",on);
+  const n=renderRally();
+  if(on&&n>=GOAL&&!celebrated()){setCelebrated(true);openCelebrate();}
+  if(state.todo&&on)render();
+});
+document.getElementById("reset").addEventListener("click",()=>{
+  if(!visited.size)return;
+  if(!confirm("訪問チェックをすべて外して、最初に戻しますか？"))return;
+  visited.clear();save();setCelebrated(false);render();
+});
+document.getElementById("todo").addEventListener("click",e=>{
+  state.todo=!state.todo;e.currentTarget.setAttribute("aria-pressed",state.todo);render();
+});
 
 document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value;render()});
 document.querySelectorAll(".chip[data-day]").forEach(b=>b.addEventListener("click",()=>{
