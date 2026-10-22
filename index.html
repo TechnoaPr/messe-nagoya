@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>メッセナゴヤ X出展社さがし｜@TechnoaPr</title>
+<title>メッセナゴヤ2026 X出展社さがし｜@TechnoaPr</title>
 <meta name="description" content="メッセナゴヤでX公式アカウントのある出展社を探せるガイド。運営：@TechnoaPr">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,7 +27,7 @@ body{
 /* スマホ背景：固定（iOS対策で疑似要素） */
 body{background:var(--soft)}
 .scene{background:var(--sky) url("bg-sp.jpg") center bottom / cover no-repeat;
-  min-height:calc(108vw + 220px);padding-bottom:8px}
+  min-height:calc(108vw + 330px);padding-bottom:8px}
 a{color:var(--sky-deep)}
 :focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
 
@@ -35,11 +35,14 @@ a{color:var(--sky-deep)}
 
 /* ===== ヘッダー（空の部分に乗せる） ===== */
 .hero{padding:16px 0 4px;text-align:center}
-.plate{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.92);border-radius:999px;padding:6px 16px 6px 6px;box-shadow:0 3px 0 var(--sky-deep)}
-.hero .event{display:inline-block;background:var(--navy);color:#fff;font-weight:700;
-  font-size:.75rem;padding:3px 10px;border-radius:999px}
-.hero h1{margin:0;font-weight:900;font-size:1.25rem;line-height:1.3;color:var(--navy)}
-.hero p{display:none}
+.plate{display:inline-block;background:rgba(255,255,255,.93);border-radius:24px;padding:12px 22px 12px;box-shadow:0 4px 0 var(--sky-deep)}
+.hero .event{font-size:.8rem;padding:3px 12px}
+.hero h1{margin:6px 0 0;font-weight:900;font-size:clamp(2rem,9vw,2.6rem);line-height:1.15;color:var(--navy);letter-spacing:.01em}
+.hero p.when{display:block;margin:2px 0 0;font-weight:900;font-size:clamp(1.7rem,7.6vw,2.2rem);line-height:1.2;color:var(--sky-deep)}
+.when small{font-size:.42em;font-weight:900;margin:0 2px 0 3px;color:var(--navy);vertical-align:.25em}
+.when .dash{margin:0 2px}
+.hero p.venue{display:block;margin:2px 0 0;font-weight:700;font-size:.85rem;color:var(--navy)}
+.hero .event{display:inline-block;background:var(--navy);color:#fff;font-weight:700;border-radius:999px}
 
 /* ===== 検索 ===== */
 .search{position:relative;top:env(safe-area-inset-top,0px);z-index:5;padding:10px 0 12px}
@@ -58,7 +61,11 @@ a{color:var(--sky-deep)}
   color:var(--navy);border-radius:999px;padding:4px 12px;cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
 .chip.nov[aria-pressed="true"]{background:var(--yellow);border-color:var(--yellow);color:var(--navy)}
-.count{margin:6px 2px 0;font-size:.85rem;color:var(--muted)}
+.meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+.map{display:inline-flex;align-items:center;gap:6px;flex:none;font-weight:700;font-size:.85rem;color:var(--navy);text-decoration:none;
+  border:2px solid var(--navy);border-radius:999px;padding:4px 12px}
+.map:hover{background:var(--navy);color:#fff}
+.count{margin:0 2px;font-size:.85rem;color:var(--muted)}
 
 /* ===== リスト ===== */
 .list{list-style:none;margin:0;padding:16px 0 24px;display:grid;gap:12px}
@@ -102,7 +109,7 @@ footer{padding:8px 0 40px}
   .hero{position:relative;padding:0;min-height:0;aspect-ratio:1024/572;max-height:68vh;width:100%;
     background:var(--sky) url("bg-pc.jpg") center bottom / cover no-repeat;
     display:flex;flex-direction:column;justify-content:flex-start;padding-top:min(3vw,32px)}
-  .hero h1{font-size:1.6rem}
+  .hero h1{font-size:2.8rem} .hero p.when{font-size:2.4rem}
   .list{padding-top:16px}
   .search{margin-top:-56px}
   .list{grid-template-columns:repeat(2,1fr)}
@@ -117,9 +124,11 @@ footer{padding:8px 0 40px}
 <div class="scene">
 <header class="hero">
   <div class="wrap"><div class="plate">
-    <span class="event">メッセナゴヤ</span>
-    <h1>X出展社さがし</h1>
-      </div></div>
+    <span class="event">X出展社さがし</span>
+    <h1>メッセナゴヤ2026</h1>
+    <p class="when">11.11<small>水</small><span class="dash">–</span>13<small>金</small></p>
+    <p class="venue">ポートメッセなごや</p>
+  </div></div>
 </header>
 
 <div class="wrap">
@@ -137,7 +146,9 @@ footer{padding:8px 0 40px}
         <button class="chip" data-day="13" aria-pressed="false">13日</button>
         <button class="chip nov" id="nov" aria-pressed="false">ノベルティあり</button>
       </div>
-      <p class="count" id="count" aria-live="polite">読み込み中…</p>
+      <div class="meta"><p class="count" id="count" aria-live="polite">読み込み中…</p>
+      <a class="map" href="https://www.messenagoya.jp/pdf/map_2026.pdf" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg>会場マップ（PDF）</a></div>
     </div>
   </div>
 </div>
@@ -203,7 +214,8 @@ function normalize(o){
     booth:pick(o,"ブース番号","小間番号"),
     handle, days,
     comment:pick(o,"一言コメント","コメント"),
-    novelty:/あり|有|○|〇|yes|true/i.test(nov),
+    novelty:!!nov&&!/^(なし|無し?|-|ー|×|no|false)$/i.test(nov),
+    noveltyName:/^(あり|有り?|○|〇|yes|true)$/i.test(nov)?"":nov,
     post:pick(o,"出展ポストURL","出展に関するポスト","ポストURL")
   };
 }
@@ -228,7 +240,7 @@ function card(x){
   const post=/^https?:\/\//.test(x.post)?`<a class="post" href="${esc(x.post)}" target="_blank" rel="noopener">出展のポストを見る</a>`:"";
   return `<li class="card">
     <div class="top">${booth}<div class="name"><h2>${esc(x.company)}</h2>${via}${handle}</div></div>
-    <div class="days"><span class="t">X担当</span>${days}${x.novelty?`<span class="nov-badge">ノベルティあり</span>`:""}</div>
+    <div class="days"><span class="t">X担当</span>${days}${x.novelty?`<span class="nov-badge">${x.noveltyName?"ノベルティ："+esc(x.noveltyName):"ノベルティあり"}</span>`:""}</div>
     ${x.comment?`<p class="comment">${esc(x.comment)}</p>`:""}
     ${post}
   </li>`;
@@ -268,7 +280,7 @@ document.getElementById("nov").addEventListener("click",e=>{
     return;
   }
   DATA=parseCSV(text).map(normalize).filter(x=>x.company)
-    .map(x=>({...x,_s:kana([x.company,x.boothName,x.booth,x.handle,x.comment].join(" "))}))
+    .map(x=>({...x,_s:kana([x.company,x.boothName,x.booth,x.handle,x.comment,x.noveltyName,x.novelty?"ノベルティあり":""].join(" "))}))
     .sort((a,b)=>boothKey(a.booth).localeCompare(boothKey(b.booth))||a.company.localeCompare(b.company,"ja"));
   render();
 })();
