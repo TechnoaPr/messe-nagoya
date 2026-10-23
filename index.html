@@ -252,7 +252,14 @@ function parseCSV(text){
 }
 
 /* 列名のゆれを吸収 */
-const pick=(o,...keys)=>{for(const k of keys){if(o[k])return o[k]}return ""};
+/* 見出しは完全一致→部分一致の順で探す（全角半角・空白のゆれも吸収） */
+const nk=k=>k.normalize("NFKC").replace(/\s/g,"");
+const pick=(o,...keys)=>{
+  const ks=Object.keys(o);
+  for(const k of keys){const h=ks.find(x=>nk(x)===nk(k));if(h&&o[h])return o[h]}
+  for(const k of keys){const h=ks.find(x=>nk(x).includes(nk(k)));if(h&&o[h])return o[h]}
+  return "";
+};
 function normalize(o){
   const handle=pick(o,"Xアカウント","Xアカウント名","アカウント").replace(/^https?:\/\/(x|twitter)\.com\//,"").replace(/^@/,"").split(/[/?]/)[0];
   const daysRaw=pick(o,"X担当対応可能日","対応可能日").toUpperCase();
@@ -266,7 +273,7 @@ function normalize(o){
     boothName:pick(o,"出展ブース名","ブース名"),
     booth:pick(o,"ブース番号","小間番号"),
     handle, days,
-    comment:pick(o,"一言コメント","コメント"),
+    comment:pick(o,"一言コメント","ひとことコメント","コメント","一言"),
     novelty:!!nov&&!/^(なし|無し?|-|ー|×|no|false)$/i.test(nov),
     noveltyName:/^(あり|有り?|○|〇|yes|true)$/i.test(nov)?"":nov,
     post:pick(o,"出展ポストURL","出展に関するポスト","ポストURL")
