@@ -204,7 +204,7 @@ footer{padding:8px 0 40px}
     <div class="notice">
       <h3>掲載について</h3>
       <ul>
-        <li>企業の公式Xアカウントを掲載しています。</li>
+        <li>出展企業の公式Xアカウントと、中の人にご了承いただいたアカウントを掲載しています。</li>
         <li>各社のXのポストをもとに掲載し、確認できない項目は「不明」としています。</li>
         <li>X担当の対応日は、当日の都合で変わる場合があります。</li>
         <li>ブーススタンプはお使いのスマホ（ブラウザ）の中だけに保存されます。</li>
@@ -248,7 +248,8 @@ function parseCSV(text){
   }
   if(f!==""||row.length){row.push(f);rows.push(row)}
   const head=rows.shift().map(h=>h.trim());
-  return rows.filter(r=>r.some(v=>v.trim())).map(r=>Object.fromEntries(head.map((h,i)=>[h,(r[i]||"").trim()])));
+  const clean=v=>{v=(v||"").trim();return /^[-－ー―‐]+$/.test(v)?"":v};
+  return rows.filter(r=>r.some(v=>clean(v))).map(r=>Object.fromEntries(head.map((h,i)=>[h,clean(r[i])])));
 }
 
 /* 列名のゆれを吸収 */
@@ -302,7 +303,7 @@ function card(x){
   else if(x.days.type==="none") days=`<span class="d na">不在</span>`;
   else if(x.days.type==="unknown") days=`<span class="d na">不明</span>`;
   else days=["11","12","13"].map(d=>`<span class="d ${x.days.list.includes(d)?"on":""}">${d}日</span>`).join("");
-  const via=x.boothName&&x.boothName!==x.company?`<p class="via">${esc(x.boothName)} ブース内</p>`:"";
+  const via=x.boothName&&x.boothName!==x.company?`<p class="via">出展ブース：${esc(x.boothName)}</p>`:"";
   const handle=x.handle?`<a class="handle" href="https://x.com/${encodeURIComponent(x.handle)}" target="_blank" rel="noopener">@${esc(x.handle)}</a>`:"";
   const post=/^https?:\/\//.test(x.post)?`<a class="post" href="${esc(x.post)}" target="_blank" rel="noopener">出展のポストを見る</a>`:"";
   const on=visited.has(idOf(x));
