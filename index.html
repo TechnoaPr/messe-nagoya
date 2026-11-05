@@ -300,8 +300,6 @@ function card(x){
     :`<div class="booth unk"><small>ブース</small><b>不明</b></div>`;
   let days;
   if(x.days.type==="all") days=`<span class="d all">全日滞在</span>`;
-  else if(x.days.type==="none") days=`<span class="d na">不在</span>`;
-  else if(x.days.type==="unknown") days=`<span class="d na">不明</span>`;
   else days=["11","12","13"].map(d=>`<span class="d ${x.days.list.includes(d)?"on":""}">${d}日</span>`).join("");
   const via=x.boothName&&x.boothName!==x.company?`<p class="via">出展ブース：${esc(x.boothName)}</p>`:"";
   const handle=x.handle?`<a class="handle" href="https://x.com/${encodeURIComponent(x.handle)}" target="_blank" rel="noopener">@${esc(x.handle)}</a>`:"";
